@@ -3,12 +3,25 @@ import pandas as pd
 import plotly.express as px
 from io import BytesIO
 
-# 📥 Carrega o arquivo Excel (caminho relativo dentro do projeto)
-arquivo = "relatorio_clientes_1_compra.xlsx"
-df = pd.read_excel(arquivo)
+# Escolha do arquivo via selectbox
+arquivo_opcoes = {
+    "Clientes com 1 Compra": "relatorio_clientes_1_compra.xlsx",
+    "Clientes com Várias Compras": "relatorio_clientes_2_compra.xlsx"
+}
 
 st.set_page_config(page_title="Dashboard de Clientes", layout="wide")
 
+st.title("Dashboard de Clientes")
+
+with st.sidebar:
+    st.header("Configurações")
+    arquivo_selecionado = st.selectbox("Escolha o relatório para análise:", options=list(arquivo_opcoes.keys()))
+
+# Carrega o arquivo Excel escolhido
+arquivo = arquivo_opcoes[arquivo_selecionado]
+df = pd.read_excel(arquivo)
+
+# Estilo CSS igual antes
 st.markdown(
     """
     <style>
@@ -53,7 +66,7 @@ st.markdown(
     unsafe_allow_html=True
 )
 
-st.title("Dashboard de Clientes com 1 Compra")
+st.header(f"Analisando: {arquivo_selecionado}")
 
 # 🎯 Filtros múltiplos
 with st.sidebar:
@@ -129,6 +142,6 @@ excel_bytes = gerar_excel_download(df_filtrado)
 st.download_button(
     label="⬇Baixar dados filtrados em Excel",
     data=excel_bytes,
-    file_name="clientes_filtrados.xlsx",
+    file_name=f"clientes_filtrados_{arquivo_selecionado.replace(' ', '_').lower()}.xlsx",
     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
 )
