@@ -3,8 +3,8 @@ import pandas as pd
 import plotly.express as px
 from io import BytesIO
 
-# 📥 Carrega o arquivo Excel
-arquivo = r"C:\Users\Windows\Desktop\Apoio dental\base nova\relatorio_clientes_1_compra.xlsx"
+# 📥 Carrega o arquivo Excel (caminho relativo dentro do projeto)
+arquivo = "relatorio_clientes_1_compra.xlsx"
 df = pd.read_excel(arquivo)
 
 st.set_page_config(page_title="Dashboard de Clientes", layout="wide")
