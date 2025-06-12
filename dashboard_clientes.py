@@ -89,6 +89,28 @@ df_filtrado = df[
     (df['Atacado / Varejo'].isin(canal))
 ]
 
+# 🔢 Métricas principais
+col1, col2 = st.columns(2)
+with col1:
+    st.metric("🧍‍♂️ Total de Clientes", int(df_filtrado['Qtd_Clientes'].sum()))
+with col2:
+    st.metric("💸 Ticket Médio Geral", f"R$ {df_filtrado['Ticket_Medio'].mean():.2f}")
+
+# 📈 Gráfico novo: Crescimento de Clientes por Ano
+df_ano = df_filtrado.groupby('Ano da Última Compra', as_index=False).agg({
+    'Qtd_Clientes': 'sum'
+})
+
+fig_ano = px.bar(
+    df_ano,
+    x='Ano da Última Compra',
+    y='Qtd_Clientes',
+    title="📈 Crescimento de Clientes por Ano",
+    labels={'Qtd_Clientes': 'Quantidade de Clientes', 'Ano da Última Compra': 'Ano'}
+)
+
+st.plotly_chart(fig_ano, use_container_width=True)
+
 # 📈 Gráfico 1: Clientes por Mês/Ano
 df_group = df_filtrado.groupby(['Ano da Última Compra', 'Mês da Última Compra'], as_index=False).agg({
     'Qtd_Clientes': 'sum',
@@ -114,14 +136,7 @@ fig2 = px.line(
     title="💸 Ticket Médio por Mês/Ano"
 )
 
-# 🔢 Métricas principais
-col1, col2 = st.columns(2)
-with col1:
-    st.metric("🧍‍♂️ Total de Clientes", int(df_filtrado['Qtd_Clientes'].sum()))
-with col2:
-    st.metric("💸 Ticket Médio Geral", f"R$ {df_filtrado['Ticket_Medio'].mean():.2f}")
-
-# 📊 Exibe gráficos
+# Exibe os gráficos antigos
 st.plotly_chart(fig1, use_container_width=True)
 st.plotly_chart(fig2, use_container_width=True)
 
